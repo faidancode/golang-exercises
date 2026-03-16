@@ -1,7 +1,6 @@
 package cart
 
 import (
-	"golang-exercises/internal/integration"
 	"net/http"
 	"sort"
 	"strconv"
@@ -10,7 +9,7 @@ import (
 )
 
 type CartHandler struct {
-	Client *integration.DummyClient
+	Client *DummyClient
 }
 
 func (h *CartHandler) fetchCarts() ([]Cart, error) {

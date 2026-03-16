@@ -1,7 +1,6 @@
 package main
 
 import (
-	"golang-exercises/internal/integration"
 	"golang-exercises/internal/integration/cart"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +9,7 @@ import (
 func main() {
 	r := gin.Default()
 
-	dummyClient := integration.NewDummyClient()
+	dummyClient := cart.NewDummyClient()
 	cartHandler := &cart.CartHandler{Client: dummyClient}
 
 	r.GET("/api/top-spenders", cartHandler.GetTopSpenders)

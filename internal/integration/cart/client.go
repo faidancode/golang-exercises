@@ -1,4 +1,4 @@
-package integration
+package cart
 
 import (
 	"encoding/json"
@@ -22,7 +22,7 @@ func (c *DummyClient) FetchGeneric(endpoint string, target interface{}) error {
 		return err
 	}
 
-	defer resp.Body.Close() 
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("Error API: status %d", resp.StatusCode)
