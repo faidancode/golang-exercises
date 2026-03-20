@@ -11,4 +11,7 @@ func main() {
 
 	newLength := array.RemoveDuplicates(input)
 	fmt.Printf("After Remove: %v, New Length: %d\n", input[:newLength], newLength)
+
+	newLength2 := array.RemoveDuplicateWithSlices(input)
+	fmt.Printf("After Remove: %v, New Length: %d\n", input, newLength2)
 }
