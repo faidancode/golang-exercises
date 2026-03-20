@@ -33,6 +33,10 @@ func (c *Client) Get(endpoint string, target interface{}) error {
 		return err
 	}
 
+	// Deferred Function Call.
+	// Memastikan sebuah perintah tetap dijalankan di akhir fungsi, apa pun yang terjadi.
+	// Tanpa defer, berarti harus menulis resp.Body.Close() secara manual sebelum setiap baris return.
+	// .Close mencegah memory leaks
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
