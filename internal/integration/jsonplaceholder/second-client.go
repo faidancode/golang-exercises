@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 type SecondClient struct {
@@ -14,7 +15,9 @@ type SecondClient struct {
 func NewSecondClient() *SecondClient {
 	return &SecondClient{
 		BaseURL: "https://jsonplaceholder.typicode.com",
-		client:  &http.Client{},
+		client: &http.Client{
+			Timeout: 10 * time.Second,
+		},
 	}
 }
 

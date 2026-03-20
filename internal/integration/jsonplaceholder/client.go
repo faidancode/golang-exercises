@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 // Kenapa pakai *http.Client? bisa reuse, timeout.
@@ -12,6 +13,9 @@ type Client struct {
 	client  *http.Client
 }
 
+// * (Asterisk) adalah operator untuk Mendefinisikan tipe pointer atau Mengintip isinya (dereference).
+// & (Ampersand) adalah operator untuk Menciptakan pointer (mengambil alamat).
+
 // Function ini adalah constructor untuk membuat instance Client.
 // Kenapa return pointer *Client ? Tidak meng-copy struct, efisien memory, bisa dipakai oleh handler/service.
 func NewClient() *Client {
@@ -19,7 +23,9 @@ func NewClient() *Client {
 	// Jadi yang dikembalikan adalah: client -> memory address -> Client struct
 	return &Client{
 		BaseURL: "https://jsonplaceholder.typicode.com",
-		client:  &http.Client{},
+		client: &http.Client{
+			Timeout: 10 * time.Second,
+		},
 	}
 }
 
@@ -37,7 +43,9 @@ func (c *Client) Get(endpoint string, target interface{}) error {
 	// Memastikan sebuah perintah tetap dijalankan di akhir fungsi, apa pun yang terjadi.
 	// Tanpa defer, berarti harus menulis resp.Body.Close() secara manual sebelum setiap baris return.
 	// .Close mencegah memory leaks
-	defer resp.Body.Close()
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("request failed with status %d", resp.StatusCode)
