@@ -33,9 +33,11 @@ func NewHandler(client *jsonplaceholder.Client) *Handler {
 // Kenapa receiver pointer? menghindari copy struct, bisa mengakses dependency seperti client
 // gin.Context adalah object dari framework Gin yang berisi: request, response etc.
 func (h *Handler) GetPosts(c *gin.Context) {
+	// instance dari DTO dalam bentuk slice.
 	var posts []Post
 
 	// Kenapa pakai &posts? Karena function Get membutuhkan pointer untuk mengisi data.
+	// &posts = pointer ke instance dto post.
 	err := h.client.Get("/posts", &posts)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

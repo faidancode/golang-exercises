@@ -19,8 +19,15 @@ type Client struct {
 // Function ini adalah constructor untuk membuat instance Client.
 // Kenapa return pointer *Client ? Tidak meng-copy struct, efisien memory, bisa dipakai oleh handler/service.
 func NewClient() *Client {
+
 	// &Client berarti: ambil alamat memory dari struct Client
 	// Jadi yang dikembalikan adalah: client -> memory address -> Client struct
+
+	// Mengapa client: &http.Client{...}?
+	// - Menghindari Salinan (Copy): http.Client adalah struct yang cukup kompleks. Di dalamnya terdapat Transport yang mengelola koneksi TCP. Jika Anda tidak menggunakan &, semua akan ter-copy
+	// - Connection Pooling: Go didesain agar satu instance http.Client digunakan berulang kali (reuse). Jika struct ini ter-copy, koneksi-koneksi lama tidak bisa dipakai kembali, yang bisa menyebabkan aplikasi Anda boros memori dan koneksi (error socket exhaustion).
+	//  - Memenuhi Tipe Data: Karena di definisi struct tertulis client *http.Client, maka wajib memberikan alamat (&), karena tipe datanya adalah pointer.
+
 	return &Client{
 		BaseURL: "https://jsonplaceholder.typicode.com",
 		client: &http.Client{

@@ -2,7 +2,7 @@ package cart
 
 import (
 	"net/http"
-	"sort"
+	"slices"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -12,6 +12,8 @@ type CartHandler struct {
 	Client *DummyClient
 }
 
+//	   Receiver        FuncName		Return Values
+//					   (params) 	(result)
 func (h *CartHandler) fetchCarts() ([]Cart, error) {
 	var data CartResponse
 	err := h.Client.FetchGeneric("/carts", &data)
@@ -49,8 +51,16 @@ func (h *CartHandler) GetTopSpenders(c *gin.Context) {
 		spenders = append(spenders, TopSpender{UserId: id, TotalSpent: total})
 	}
 
-	sort.Slice(spenders, func(i, j int) bool {
-		return spenders[i].TotalSpent > spenders[j].TotalSpent
+	slices.SortFunc(spenders, func(a, b TopSpender) int {
+		// Jika b > a (descending), return positif
+		if b.TotalSpent > a.TotalSpent {
+			return 1
+		}
+		// Jika b < a, return negatif
+		if b.TotalSpent < a.TotalSpent {
+			return -1
+		}
+		return 0
 	})
 
 	if len(spenders) > limit {
